@@ -1,0 +1,32 @@
+{% extends 'library/base.html' %}
+
+{% block content %}
+
+<h1>Proposal Listing</h1>
+<br>
+<a href="{% url 'new_proposal' %}">Create New Proposal</a>
+<h3>Outgoing Proposals</h3>
+<ul>
+    {% for proposed in proposed_book_list %}
+        <li>{{ proposed }} - {{ proposed.get_status_display }}</li>
+    {% endfor %}
+</ul>
+<br>
+<h3>Incoming Proposals</h3>
+<ul>
+    {% for requested in requested_book_list %}
+        <li>{{ requested }} - {{ requested.get_status_display }}</li>
+        {% if requested.status == 0 %}
+        <form method="POST" action="{% url 'proposal_approve' requested.pk %}">
+          {% csrf_token %}
+          <button type="submit">Approve</button>
+        </form>
+
+        <form method="POST" action="{% url 'proposal_reject' requested.pk %}">
+          {% csrf_token %}
+          <button type="submit">Reject</button>
+        </form>
+      {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}
